@@ -6,7 +6,7 @@ import { Header } from 'react-native-elements';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { ListItem } from 'react-native-elements';
 // import { Icon } from 'react-native-elements';
-import { Tab,Text,Input,Button, SearchBar } from 'react-native-elements';
+import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import uuid from 'react-native-uuid';
 
@@ -54,11 +54,13 @@ class Engine extends React.Component {
     super(props);
     this.state = {
       target: '',
+      series:[400,800,1700],
       FourHundred: 6.49,
       EightHundred: 12.99,
       OneThousandSevenHundred:25.99,
       // Array of Key&Value Pairs
       Options:[],  
+      recursionOptions:[],
     };
 
     this.handleChange=this.handleChange.bind(this);
@@ -67,9 +69,14 @@ class Engine extends React.Component {
     // this.generateOptionsByRandomnMethod=this.generateOptionsByRandomnMethod.bind(this);
     // this.formOptions=this.formOptions.bind(this);
     this.returnRenderItem=this.returnRenderItem.bind(this);
+    this.returnRenderedOptions=this.returnRenderedOptions.bind(this);
     this.componentDidUpdate=this.componentDidUpdate.bind(this);
     this.createOptionsObject=this.createOptionsObject.bind(this);
     this.determinePrice=this.determinePrice.bind(this);
+    this.combineElements=this.combineElements.bind(this);
+    this.recursion_generateOptions=this.recursion_generateOptions.bind(this);
+    this.setData=this.setData.bind(this);
+    // this.findCombination=this.findCombination.bind(this);
     // this.checkIfFactorOf400=this.checkIfFactorOf400.bind(this);
     // this.checkIfFactorOf800=this.checkIfFactorOf800.bind(this);
     // this.checkIfFactorOf1700=this.checkIfFactorOf1700.bind(this);
@@ -78,14 +85,18 @@ class Engine extends React.Component {
 
   handleChange=(text)=>{
 
-    console.log(text);
+    this.setState({ //Empty Options Arrays with New Entry
+      Options:[],
+      recursionOptions:[],
+    })
 
-    this.setState({Options: []}); //empty Options
+    console.log(text);
 
     this.setState({
       target:text
       },function(){    
-      this.generateOptionsByFactors(this.state.target);
+      // this.generateOptionsByFactors(this.state.target);
+      this.combineElements(this.state.series,this.state.target)
     })
 
     console.log("state update: " + this.state.target)
@@ -94,9 +105,26 @@ class Engine extends React.Component {
 
   // returnPricePerPackage
 
+  recursion_determinePrice=(series)=>{
+
+    let total=0;
+
+    series.map(value=>{
+
+      if(value===400) total+=this.state.FourHundred;
+      if(value===800) total+=this.state.EightHundred;
+      if(value===1700) total+=this.state.OneThousandSevenHundred;
+
+      console.log("recursion_determinePrice: value " + value + "total: " + total)
+
+    })
+
+    return total;
+  }
+
   determinePrice=(multiplicator,multiplicand)=>{
 
-    if(multiplicand==400) return multiplicator*6.49;
+    if(multiplicand==400) return Math.ceil((multiplicator*6.49) * 100) / 100
     if(multiplicand==800) return multiplicator*12.99;
     if(multiplicand==1700) return multiplicator*25.99;
 
@@ -114,11 +142,19 @@ class Engine extends React.Component {
       price: price,
     }
 
-    this.setState(prevState => ({
-      Options: [...prevState.Options,optionsObject]
-      })
-    )
+    this.setState({
+      Options: [optionsObject]
+    })
+
   }
+
+  // createOptionsObject=(combination)=>{
+
+    //If Repeating Values Exist
+    //Group Repeating Values
+    
+    //
+  // }
 
   generateOptionsByFactors=(target)=>{ 
 
@@ -142,9 +178,7 @@ class Engine extends React.Component {
         this.createOptionsObject(quotient,1700);
       }
 
-    
-
-
+  
       // new Promise (function(resolve,reject){
       //   checkIfFactorOf400(target)
       // }).then(function(result){
@@ -155,14 +189,117 @@ class Engine extends React.Component {
 
   }
 
-  // generateOptionsByUniqueSet=(target)=>{
-    //When the target(divident) is divided by 400/800/1700, does it leave a remainder of 400, or 800?
-    //Is the remainder a multiple of 400?
-    //If so, the divisor of the target, multiplied by the quotient, and the remainder(is a multiple of 400) and it's multiplicator creates an option
-  // }
+  setData=(data)=>{
+
+    let array=[{}];
+
+    //ASync
+    data.map(set=>{
+
+      console.log("setData:Mapping... " + set);
+      console.log(this.recursion_generateOptions(set));
+      // array.push(this.recursion_generateOptions(set)); // places Objects returned from recursion_generateOptions into array
+
+      this.setState(prevState=>({
+        recursionOptions: [...prevState.recursionOptions,this.recursion_generateOptions(set)]
+      }),function(){    
+        console.log("this.state.recursionOptions: "+ this.state.recursionOptions)
+      })
+
+    })
+
+    // this.setState(prevState=>({
+    //   recursionOptions: [...prevState.recursionOptions,array]
+    // }),function(){    
+    //   console.log("this.state.recursionOptions: "+ this.state.recursionOptions)
+    // })
+    
+
+  }
+
+  recursion_generateOptions=(series)=>{
+
+    let array=[];
+    let list=[];
+
+    console.log("recursion_generateOptions series: " + series);
+
+    let uniqueID=uuid.v1();
+    let optionsString="";
+    let price=this.recursion_determinePrice(series)
+
+    // Group Same Values
+
+    series.map(number=>{
+
+      if(array.findIndex( obj => obj.value === number) ===-1){ // If Group of Numbers Does Not Exist, Create New
+
+        list.push(number);
+        let grouped={};
+        grouped.value=number;
+        grouped.count=1;
+
+        // console.log("grouped: " + grouped + "number: " + number)
+
+        
+        array.push(grouped);
+
+      } else { // If Group of Numbers Exist, Add to Group's "Count"
+
+        let index=array.findIndex( obj => obj.value == number);
+        array[index].count+=1;
+
+      }
+
+    })
+    console.log("array: " + JSON.stringify(array));
+
+    optionsString=this.returnRenderedOptions(array);
+
+
+    const optionsObject ={
+      id: uniqueID,
+      options: optionsString,
+      price: price,
+    }
+
+    console.log("optionsObject: " + optionsObject)
+
+
+
+    return optionsObject
+
+    // this.setState({
+    //   recursionOptions: [optionsObject],
+    // })
+
+  }
+  
+
+  generateOptionsByUniqueSet=(target)=>{
+    // When the target(divident) is divided by 400/800/1700, does it leave a remainder of 400, or 800?
+    // Is the remainder a multiple of 400?
+    // If so, the divisor of the target, multiplied by the quotient, and the remainder(is a multiple of 400) and it's multiplicator creates an option
+  }
 
   // generateOptionsByRandomnMethod=(target)=>{}
   // formOptions=()=>{}
+  
+  returnRenderedOptions=(options)=>{
+
+    console.log("returnRenderedOptions: " + JSON.stringify(options))
+
+    let label="";
+
+    options.map((option)=>{
+      label+="\n" + option.count + " of " +  option.value;
+    })
+    
+    console.log(label);
+
+    return label;
+
+  }
 
   returnRenderItem=(item)=>{
     // return <View style={styles.item}>
@@ -176,7 +313,7 @@ class Engine extends React.Component {
     {
         <ListItem bottomDivider>
           <ListItem.Content>
-            <ListItem.Title>{item.item.options}  ${item.item.price} </ListItem.Title>
+            <ListItem.Title> {item.item.options} ${item.item.price} </ListItem.Title>
             {/* <ListItem.Subtitle>{item.item.options}</ListItem.Subtitle> */}
           </ListItem.Content>
         </ListItem>
@@ -184,7 +321,53 @@ class Engine extends React.Component {
     </View>
   }
 
+  combineElements=(arr,sum)=>{
+
+    let output=[];
+
+    function findCombination(remainder,path,entry){
+      
+      // console.log("Calling findCombination Path Values: " + path)
+
+      if(remainder<0){
+        // console.log("Breaking Out of Loop: Negative Remainder " + path)
+        return;
+      }
+  
+      if(remainder === 0){
+        // console.log("Breaking Out of Loop: 0 Remainder " + path)
+        output.push([...path]);
+        return;
+      }
+      
+      // console.log("Continuing to Loop with Path Values: " + path)
+      for(let i=entry; i < arr.length; i++){
+        // console.log(" Entering 'Path' Values: " + path )
+        findCombination(remainder-arr[i],[...path,arr[i]],i); // Is operating   a for loop; Repeats this Line Until Broken Out Of; 
+        //2
+        //2,2
+        //2,2
+        // console.log(" Exiting Path Values: " + path)
+      }
+
+    }
+
+    findCombination(sum,[],0);
+    console.log(output);
+
+    this.setData(output);
+
+    // output.map(set=>{
+    //   this.setData(this.recursion_generateOptions(set));
+    // })
+ 
+    return output;
+  }
+
+
+
   componentDidUpdate=()=>{
+
     console.log("component updated. state: " + this.state.target)
     // this.generateOptionsByFactors(this.state.target);
     // Call functions
@@ -192,6 +375,12 @@ class Engine extends React.Component {
     // this.generateOptionsByRandomnMethod();
   }
 
+  componentDidMount=()=>{
+    //Test Function
+    // let arr=[2,3,6,7]
+    // let sum=7;
+    // console.log(this.combineElements(arr,sum));
+  }
   render() {
 
     return (
@@ -216,13 +405,18 @@ class Engine extends React.Component {
               value={this.state.target}
               lightTheme="true"
             />
-
-            <FlatList 
+          
+            {/* <FlatList 
               data={this.state.Options} 
               keyExtractor={item => item.id} 
               renderItem={this.returnRenderItem}>
-            </FlatList>
+            </FlatList> */}
 
+            <FlatList 
+              data={this.state.recursionOptions} 
+              keyExtractor={item => item.id} 
+              renderItem={this.returnRenderItem}>
+            </FlatList>
 {/* 
             <View>
               {
@@ -273,6 +467,11 @@ const styles = StyleSheet.create({
 
   tab:{
     backgroundColor:'#fff',
+  },
+
+  divider: {
+    backgroundColor:'blue',
+    // height:1,
   }
 
 });
