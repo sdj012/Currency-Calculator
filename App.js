@@ -3,19 +3,23 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Header } from 'react-native-elements';
-import Engine from './Engine'
+import Options from './Options/Options';
+import Main from './Main/Main';
 
 export default function App() {
 
   return (
     <SafeAreaProvider>
+
       <Header
       backgroundColor='#fff'
       leftComponent={{ icon: 'menu', color: '#000000' }}
       centerComponent={{ text: 'Robux Calculator ', style: { color: '#000000' } }}
       rightComponent={{ icon: 'home', color: '#000000' }}
       />
-        <Engine/>
+
+      <Main/>
+
     </SafeAreaProvider>
 
   );
