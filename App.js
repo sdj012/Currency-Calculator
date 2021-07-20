@@ -5,6 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Header } from 'react-native-elements';
 import Options from './Options/Options';
 import Main from './Main/Main';
+import { store } from './Store/data';
+import { Provider } from 'react-redux';
 
 export default function App() {
 
@@ -18,7 +20,9 @@ export default function App() {
       rightComponent={{ icon: 'home', color: '#000000' }}
       />
 
-      <Main/>
+      <Provider store={store}>
+        <Main/>
+      </Provider>
 
     </SafeAreaProvider>
 

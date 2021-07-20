@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import Options from '../Options/Options';
+import Options from '../List/Options';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
