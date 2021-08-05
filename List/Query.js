@@ -9,7 +9,7 @@ import uuid from 'react-native-uuid';
 import { useSelector, useDispatch } from 'react-redux'
 import { testStore } from '../Store/testSlice'
 
-export function Options(props) {
+export function Query(props) {
   
   const dispatch = useDispatch()
   const options = useSelector(state => state.test.value)
@@ -117,4 +117,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Options);
+export default connect(mapStateToProps,mapDispatchToProps)(Query);

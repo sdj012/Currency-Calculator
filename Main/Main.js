@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import Options from '../List/Options';
+import Query from '../List/Query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
@@ -12,28 +12,7 @@ class Main extends React.Component {
   constructor(props) {
 
     super(props);
-    this.state = {
-      target: '',
-    };
-
-    this.handleChange=this.handleChange.bind(this);
-    this.componentDidUpdate=this.componentDidUpdate.bind(this);
-  
-  }
-
-  handleChange=(text)=>{
-
-    this.setState({
-      target:text
-    })
-
-    console.log("state update: " + this.state.target)
-    
-  }
-
-  componentDidUpdate=()=>{
-
-    console.log("component updated. state: " + this.state.target)
+    this.state = {};
 
   }
 
@@ -57,7 +36,7 @@ class Main extends React.Component {
           lightTheme="true"
           /> */}
 
-          <Options/>
+          <Query/>
 
           </View>
         </SafeAreaView>
