@@ -1,7 +1,8 @@
-import determinePrice from './PackagerHelper';
-import generateSentence from './PackagerHelper';
+import { determinePrice } from './PackagerHelper.js';
+import { generateSentence } from './PackagerHelper.js';
+import uuid from 'react-native-uuid';
 
-export default generateOptions=(series)=>{ //Packages Array Of Numbers, Determines and Adds Price
+export default function generateOptions(series){ //Packages Array Of Numbers, Determines and Adds Price
  
   let array=[];
   let list=[];
@@ -16,7 +17,7 @@ export default generateOptions=(series)=>{ //Packages Array Of Numbers, Determin
 
   series.map(number=>{
 
-    if(array.findIndex( obj => obj.value === number) ===-1){ // If Group of Numbers Does Not Exist, Create New
+    if(array.findIndex( obj => obj.value === number) === -1){ // If Group of Numbers Does Not Exist, Create New
 
       list.push(number);
       let grouped={};
@@ -24,7 +25,6 @@ export default generateOptions=(series)=>{ //Packages Array Of Numbers, Determin
       grouped.count=1;
 
       // console.log("grouped: " + grouped + "number: " + number)
-
       
       array.push(grouped);
 
@@ -36,6 +36,7 @@ export default generateOptions=(series)=>{ //Packages Array Of Numbers, Determin
     }
 
   })
+  
   console.log("array: " + JSON.stringify(array));
 
   optionsString=generateSentence(array);

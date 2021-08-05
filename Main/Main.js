@@ -4,6 +4,9 @@ import Options from '../List/Options';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
+import store from '../store/store'
+import { Provider } from 'react-redux'
+
 class Main extends React.Component {
   
   constructor(props) {
@@ -38,6 +41,8 @@ class Main extends React.Component {
 
     return (
 
+      <Provider store={store}>
+
       <SafeAreaProvider>
 
         <SafeAreaView style={styles.container}>
@@ -52,12 +57,14 @@ class Main extends React.Component {
           lightTheme="true"
           /> */}
 
-          <Options target={this.state.target}/>
+          <Options/>
 
           </View>
         </SafeAreaView>
 
-      </SafeAreaProvider>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+      </SafeAreaProvider>   
+
+      </Provider>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
       
       )
     }

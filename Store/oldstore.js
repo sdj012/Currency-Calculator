@@ -1,4 +1,20 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit'
+import { createSlice, configureStore, counterSlice } from '@reduxjs/toolkit'
+
+const test = createSlice({
+  //Package
+  name: 'test',
+  initialState: 0,
+  reducers: {
+    testStore: state => {
+      // Redux Toolkit allows us to write "mutating" logic in reducers. It
+      // doesn't actually mutate the state because it uses the Immer library,
+      // which detects changes to a "draft state" and produces a brand new
+      // immutable state based off those changes
+      console.log("testStore")
+      state.value +=1
+    },
+  }
+})
 
 const series = createSlice({
   //Package
@@ -18,9 +34,9 @@ const series = createSlice({
   }
 })
 
-const package = createSlice({
+const createPackage = createSlice({
   //Package
-  name: 'Package',
+  name: 'Create Package',
   initialState: [{ Size: 400 , Price: 6.49 },{ Size: 800, Price: 12.99 }, { Size: 1700, Price: 25.99}],
   reducers: {
     incremented: state => {
@@ -39,18 +55,16 @@ const package = createSlice({
 const optionsWORemainder = createSlice({
   //Package
   name: 'OptionsWORemainders',
-  initialState: [{ Package: [], Price: 0 }],
+  initialState: [],
   reducers: {
-    incremented: state => {
+    setOptions: (state,action) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value += 1
+      console.log("redux store: set Options: ")
+      state.value.push(action.payload);
     },
-    decremented: state => {
-      state.value -= 1
-    }
   }
 })
 
@@ -73,19 +87,14 @@ const optionsWRemainder = createSlice({
 })
 
 
-export const { incremented, decremented } = counterSlice.actions
+export const { testStore } = test.actions
 
-const store = configureStore({
-  reducer: counterSlice.reducer
+export const store = configureStore({
+  reducer: {
+    test: testStore
+  }
 })
 
-// Can still subscribe to the store
-store.subscribe(() => console.log(store.getState()))
 
-// Still pass action objects to `dispatch`, but they're created for us
-store.dispatch(incremented())
-// {value: 1}
-store.dispatch(incremented())
-// {value: 2}
-store.dispatch(decremented())
-// {value: 1}
+// Can still subscribe to the store
+// store.subscribe(() => console.log(store.getState()))

@@ -1,63 +1,35 @@
-import React from 'react';
-import connect from 'react-redux';
+import React, { useState } from 'react';
+import { connect, useStore } from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import configureSet from './Utils/CombinationGenerator';
 import uuid from 'react-native-uuid';
+import { useSelector, useDispatch } from 'react-redux'
+import { testStore } from '../Store/testSlice'
 
-class Options extends React.Component {
+export function Options(props) {
   
-  constructor(props) {
+  const dispatch = useDispatch()
+  const options = useSelector(state => state.test.value)
+  
+  const [target, setTarget] = useState(props.target);
 
-    super(props);
-
-    this.state = {
-      target: this.props.target,
-      series:[400,800,1700],
-      FourHundred: 6.49,
-      EightHundred: 12.99,
-      OneThousandSevenHundred:25.99,
-      // Array of Key&Value Pairs
-      Options:[],  
-      OptionsWithRemainder:[],
-    };
-
-    this.returnRenderItem=this.returnRenderItem.bind(this);
-    this.generateSentence=this.generateSentence.bind(this);
-    this.componentDidUpdate=this.componentDidUpdate.bind(this);
-    this.determinePrice=this.determinePrice.bind(this);
-    this.configureSet=this.configureSet.bind(this);
-    this.generateOptions=this.generateOptions.bind(this);
-    this.setData=this.setData.bind(this);
-
-  }
-
-  handleChange=(text)=>{
-
-    this.setState({ //Empty Options Arrays with New Entry
-      Options:[],
-    })
-
-    console.log("handleChange: "+text + "Options: " + JSON.stringify(this.state.Options)) ;
-
-    this.setState({
-      target:text
-      },function(){
-      this.configureSet(this.state.series,this.state.target)
-    })
-
-    console.log("state update: " + this.state.target)
-    
-  }
-
+  // Array of Key&Value Pairs
   // determine Price: returnPricePerPackage
   // setData: Calls generateOptions to Retrieve Options Object. Sets Retrieved Object To Current State.
   // generateOptions: Packages Array Of Numbers, Determines and Adds Price
   // generateSentence
   // configureSet -> determines set and passes Set to -> setData
 
-  returnRenderItem=(item)=>{
+  const handleChange=(text)=>{
+    setTarget(text)
+    dispatch(testStore(text))
+    console.log("test state : " + options)
+  }
+
+  const returnRenderItem=(item)=>{
 
     return <View>
     {
@@ -70,38 +42,33 @@ class Options extends React.Component {
     </View>
   }
 
-  componentDidUpdate=()=>{
+    return (   
 
-    console.log("component updated. state: " + this.state.target)
-
-  }
-
-  render() {
-
-    return (        
+      <>    
       
-      <SafeAreaProvider>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaProvider>
+          <SafeAreaView style={styles.container}>
 
-          <SearchBar
-          placeholder="How Many Coins Do You Need?"
-          onChangeText={this.handleChange}
-          value={this.state.target}
-          lightTheme="true"
-          />
+            <SearchBar
+            placeholder="How Many Coins Do You Need?"
+            onChangeText={handleChange}
+            value={target}
+            lightTheme="true"
+            />
 
-          <FlatList 
-            data={this.state.Options} 
-            keyExtractor={item => item.id} 
-            renderItem={this.returnRenderItem}>
-          </FlatList>
+            {/* <FlatList 
+              data={this.state.Options} 
+              keyExtractor={item => item.id} 
+              renderItem={this.returnRenderItem}>
+            </FlatList> */}
 
-        </SafeAreaView>
-      </SafeAreaProvider>
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </>
 
     );
+
   }
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -139,4 +106,15 @@ const styles = StyleSheet.create({
 
 });
 
-export default Options;
+const mapStateToProps = (state) => {
+  return { test: state.value };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    // dispatching plain actions
+    test: () => dispatch(testStore()),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Options);

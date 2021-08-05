@@ -1,4 +1,4 @@
-export default determinePrice=(series)=>{
+function determinePrice(series){
 
   let total=0;
 
@@ -18,7 +18,7 @@ export default determinePrice=(series)=>{
 }
 
 
-export default generateSentence=(options)=>{
+function generateSentence(options){
 
   console.log("generateSentence: " + JSON.stringify(options))
 
@@ -34,3 +34,4 @@ export default generateSentence=(options)=>{
 
 }
 
+export { determinePrice, generateSentence};

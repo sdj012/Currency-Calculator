@@ -1,7 +1,6 @@
+import setData from "./Setter.js";
 
-import setData from './Setter';
-
-export default configureSet=(arr,sum)=>{ // configureSet -> determines set and passes Set to -> setData
+export default function configureSet(arr,sum){ // configureSet -> determines set and passes Set to -> setData
 
   let output=[];
 
