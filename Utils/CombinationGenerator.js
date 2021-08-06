@@ -1,6 +1,6 @@
 import setData from "./Setter.js";
 
-export default function configureSet(arr,sum){ // configureSet -> determines set and passes Set to -> setData
+export default function configureSet(sum,arr){ // configureSet -> determines set and passes Set to -> setData
 
   let output=[];
 
@@ -27,10 +27,14 @@ export default function configureSet(arr,sum){ // configureSet -> determines set
   findCombination(sum,[],0);
   console.log(output);
 
-  setData(output);
-
   return output;
   
 }
 
+  // Array of Key&Value Pairs
+  // determine Price: returnPricePerPackage
+  // setData: Calls generateOptions to Retrieve Options Object. Sets Retrieved Object To Current State.
+  // generateOptions: Packages Array Of Numbers, Determines and Adds Price
+  // generateSentence
+  // configureSet -> determines set and passes Set to -> setData
 

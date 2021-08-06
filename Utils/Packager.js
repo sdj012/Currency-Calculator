@@ -11,6 +11,7 @@ export default function generateOptions(series){ //Packages Array Of Numbers, De
 
   let uniqueID=uuid.v1();
   let optionsString="";
+  
   let price=determinePrice(series)
 
   // Group Same Values

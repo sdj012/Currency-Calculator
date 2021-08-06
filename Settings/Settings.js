@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import configureSet from '../Utils/CombinationGenerator';
+import configureSet from './Utils/CombinationGenerator';
 import uuid from 'react-native-uuid';
 import { useSelector, useDispatch } from 'react-redux'
 import { testStore } from '../Store/optionsSlice'
@@ -40,6 +40,16 @@ export function List(props) {
 
   }
 
+const mapStateToProps = (state) => {
+  return { test: state.value };
+}
 
-export default List;
+const mapDispatchToProps = dispatch => {
+  return {
+    // dispatching plain actions
+    test: () => dispatch(testStore()),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Options);
 

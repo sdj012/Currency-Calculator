@@ -4,9 +4,9 @@ const initialState = {
   value: 0,
 }
 
-const test = createSlice({
+const withRemainders = createSlice({
   //Package
-  name: 'test',
+  name: 'withRemainders',
   initialState: { value: 0 },
   reducers: {
     testStore: (state,action) => {
@@ -14,17 +14,16 @@ const test = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      console.log("testStore, action.payload = " + action.payload)
+      console.log("withRemainders, action.payload = " + action.payload)
       state.value+=1
       console.log("state.value is: " + state.value)
     },
   }
 })
 
+export const { withRemaindersStore } = withRemainders.actions
 
-export const { testStore } = test.actions
-
-export default test.reducer;
+export default withRemainders.reducer;
 
 
 // Can still subscribe to the store

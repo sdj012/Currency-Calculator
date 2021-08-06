@@ -1,10 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import Query from '../List/Query';
+import { StatusBar } from 'expo-status-bar';
+import Query from './Query';
+import List from '../List/List';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
-import store from '../store/store'
+import store from '../Store/store'
 import { Provider } from 'react-redux'
 
 class Main extends React.Component {
@@ -22,26 +23,23 @@ class Main extends React.Component {
 
       <Provider store={store}>
 
-      <SafeAreaProvider>
+        <SafeAreaProvider>
 
-        <SafeAreaView style={styles.container}>
+          <SafeAreaView style={styles.container}>
 
-          <View style={styles.container}>
-          <StatusBar style="auto" />
-{/* 
-          <SearchBar
-          placeholder="How Many Coins Do You Need?"
-          onChangeText={this.handleChange}
-          value={this.state.target}
-          lightTheme="true"
-          /> */}
+            <View style={styles.container}>
 
-          <Query/>
+              <StatusBar style="auto" />
 
-          </View>
-        </SafeAreaView>
+              <Query/>
 
-      </SafeAreaProvider>   
+              {/* <List/> */}
+
+            </View>
+
+          </SafeAreaView>
+
+        </SafeAreaProvider>   
 
       </Provider>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
       
