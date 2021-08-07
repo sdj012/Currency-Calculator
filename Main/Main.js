@@ -2,23 +2,18 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import Query from './Query';
 import List from '../List/List';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet, SafeAreaView, FlatList, View, TextInput } from 'react-native';
 import { Tab,Text,Input,Button, SearchBar, Divider } from 'react-native-elements';
-import store from '../Store/store'
-import { Provider } from 'react-redux'
+import store from '../Store/store';
+import { Provider } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-class Main extends React.Component {
-  
-  constructor(props) {
+function Main({ navigation }){
 
-    super(props);
-    this.state = {};
-
-  }
-
-  render() {
-
+ 
     return (
 
       <Provider store={store}>
@@ -27,15 +22,22 @@ class Main extends React.Component {
 
           <SafeAreaView style={styles.container}>
 
-            <View style={styles.container}>
+          <Button
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <SettingsIcon></SettingsIcon>
 
-              <StatusBar style="auto" />
+          </Button>  
 
-              <Query/>
+              <View style={styles.container}>
 
-              {/* <List/> */}
+                <StatusBar style="auto" />
 
-            </View>
+                <Query/>
+
+                {/* <List/> */}
+
+              </View>
 
           </SafeAreaView>
 
@@ -45,7 +47,7 @@ class Main extends React.Component {
       
       )
     }
-  }
+
 
   const styles = StyleSheet.create({
     container: {
